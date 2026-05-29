@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  Landing page Alternance 2026 — BTS CCST                        ║
+  ║  Pôle Sup' Marcel Callo · Redon                                 ║
+  ║  URL : bit.ly/callo-bts-ccst-2026                               ║
+  ║  Version : 3.0 — avec envoi Google Sheets via Apps Script       ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  POUR DUPLIQUER VERS UNE AUTRE FORMATION :                      ║
+  ║  1. Modifier le bloc CONFIG dans le JS (formation, scriptUrl)   ║
+  ║  2. Adapter les formations dans le HTML (chercher MODIFIABLE)   ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  ADMIN KPI : ajouter ?admin=1 à l'URL                          ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Alternance BTS CCST 2026 — Pôle Sup' Callo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --or:#F4681A; --or-l:#FFF3EC; --or-m:rgba(244,104,26,.15);
+  --sl:#455156; --sl-l:rgba(69,81,86,.08);
+  --ol:#B7BD2D; --ol-l:rgba(183,189,45,.12);
+  --dk:#30393C;
+  --acc:#F4681A; --acc-l:#FFF3EC;
+  --bg:#f4f4f4; --card:#fff; --brd:#e0e0e0;
+  --t:#1a1a1a; --t2:#555; --t3:#999;
+  --f:'Montserrat','Arial',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:var(--bg);font-family:var(--f);}
+body{display:flex;flex-direction:column;align-items:center;padding:20px 12px 48px;}
+.lp{width:100%;max-width:420px;border-radius:18px;overflow:hidden;box-shadow:0 6px 32px rgba(0,0,0,.12);border:1px solid var(--brd);background:var(--card);}
+
+/* HEADER */
+.topbar{background:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd);}
+.topbar img{height:40px;width:auto;object-fit:contain;}
+.topbar-badge{display:inline-flex;align-items:center;gap:6px;background:var(--acc);border-radius:20px;padding:4px 11px;}
+.topbar-badge i{color:#fff;font-size:13px;}
+.topbar-badge span{color:#fff;font-size:10px;font-weight:700;letter-spacing:.5px;}
+
+/* HERO */
+.hero{background:var(--sl);padding:20px 18px 16px;text-align:center;}
+.hero h1{color:#fff;font-size:18px;font-weight:900;line-height:1.28;margin-bottom:5px;}
+.hero h1 span{color:var(--or);}
+.hero-sub{color:rgba(255,255,255,.6);font-size:11px;}
+.timer-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(244,104,26,.22);border-radius:20px;padding:4px 12px;margin-top:10px;}
+.timer-pill i{color:var(--or);font-size:12px;}
+.timer-pill span{color:#fff;font-size:11px;font-weight:600;}
+
+/* STAT BAR */
+.sbar{background:var(--ol);padding:10px 18px;text-align:center;}
+.sbar-row{display:flex;align-items:baseline;justify-content:center;gap:7px;}
+.sbar-n{font-size:24px;font-weight:900;color:#fff;}
+.sbar-l{font-size:10px;color:rgba(255,255,255,.9);font-weight:600;line-height:1.4;}
+.sbar-disc{font-size:8.5px;color:rgba(255,255,255,.55);margin-top:3px;line-height:1.4;}
+
+/* BODY */
+.body{padding:18px 16px 22px;}
+
+/* PROGRESSION */
+.prog{margin-bottom:16px;}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:5px;}
+.prog-lbl{font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;}
+.prog-pct{font-size:10px;color:var(--or);font-weight:700;}
+.prog-bar{display:flex;gap:4px;}
+.seg{height:3px;flex:1;border-radius:2px;background:#e0e0e0;transition:background .3s;}
+.seg.done{background:var(--or);} .seg.act{background:rgba(244,104,26,.35);}
+
+/* NAV */
+.nav{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.back{display:flex;align-items:center;gap:4px;border:1px solid var(--brd);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;background:none;font-family:var(--f);transition:all .15s;}
+.back:hover{border-color:var(--sl);color:var(--sl);background:#f5f5f5;}
+.nav-lbl{font-size:12px;font-weight:700;color:var(--t);}
+
+/* TEXTES */
+.qlbl{font-size:12px;font-weight:700;color:var(--sl);margin-bottom:6px;}
+.qhint{font-size:10px;color:var(--t2);margin-bottom:12px;line-height:1.5;}
+.sep{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--t3);text-transform:uppercase;margin:14px 0 8px;border-top:1px solid var(--brd);padding-top:10px;}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.opt{display:flex;align-items:center;gap:10px;border:1px solid var(--brd);border-radius:10px;padding:11px 12px;cursor:pointer;font-size:12px;color:var(--t);background:#fff;transition:border-color .15s,background .15s;user-select:none;}
+.opt:hover{border-color:var(--or);background:var(--or-l);}
+.opt.sel{border-color:var(--or);background:var(--or-l);}
+.ck{width:17px;height:17px;min-width:17px;border-radius:50%;border:1.5px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.opt.sel .ck{background:var(--or);border-color:var(--or);}
+.opt.sel .ck i{color:#fff;font-size:10px;display:block!important;}
+.ck i{display:none;}
+.ic{width:44px;height:44px;min-width:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.ic svg{width:44px;height:44px;}
+.opt-tx .ot{font-size:12px;font-weight:700;color:var(--t);}
+.opt-tx .os{font-size:10px;color:var(--t2);margin-top:2px;}
+
+/* CHAMPS */
+.field{margin-bottom:10px;}
+.fl{font-size:11px;font-weight:700;color:var(--sl);margin-bottom:4px;display:block;}
+.fh{font-size:10px;color:var(--t3);margin-top:4px;}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--brd);font-size:12px;font-family:var(--f);color:var(--t);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s;}
+.field input:focus,.field select:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--or-m);}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.chip{padding:5px 10px;border-radius:20px;border:1px solid var(--brd);font-size:11px;cursor:pointer;background:#fff;color:var(--t);transition:all .15s;user-select:none;}
+.chip:hover{border-color:var(--or);}
+.chip.callo{border-color:var(--ol);background:var(--ol-l);color:#555f00;font-weight:700;}
+.chip.sel{border-color:var(--or);background:var(--or-l);color:var(--or);font-weight:700;}
+.chip-badge{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--or);color:#fff;font-size:9px;font-weight:700;margin-left:3px;vertical-align:middle;}
+#chip-order{margin-bottom:10px;display:none;}
+#chip-order p{font-size:10px;color:var(--t2);margin-bottom:5px;}
+#chip-list{display:flex;flex-wrap:wrap;gap:5px;}
+
+/* HUMEUR */
+.moods{display:flex;gap:5px;margin-bottom:12px;}
+.mood{flex:1;text-align:center;border:1px solid var(--brd);border-radius:8px;padding:8px 4px;cursor:pointer;font-size:10px;line-height:1.4;color:var(--t2);user-select:none;transition:all .15s;}
+.mood:hover{border-color:var(--or);}
+.mood.sel{border-color:var(--or);background:var(--or-l);color:var(--or);font-weight:700;}
+.me{font-size:16px;display:block;margin-bottom:3px;}
+
+/* INFO BOX */
+.ib{background:#f8f8f8;border:1px solid var(--brd);border-radius:8px;padding:11px 13px;margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.65;}
+.ib strong{color:var(--t);}
+
+/* CTA */
+.cta{width:100%;background:var(--or);color:#fff;border:none;border-radius:9px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f);transition:opacity .15s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.cta:hover{opacity:.88;}
+.cta.sl{background:var(--sl);}
+
+/* CONFIRM */
+.cf{text-align:center;padding:10px 0;}
+.cf-ic{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.cf h3{font-size:17px;font-weight:700;margin-bottom:10px;}
+.cf-msg{font-size:12px;color:var(--t2);line-height:1.75;margin-bottom:16px;text-align:left;background:#f8f8f8;border-radius:8px;padding:13px;border:1px solid var(--brd);}
+.cf-msg strong{color:var(--sl);}
+.cf-cta{background:var(--sl);color:#fff;padding:13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;width:100%;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:6px;}
+.cf-cta:hover{opacity:.88;}
+.cf-send-status{font-size:10px;color:var(--t3);text-align:center;margin-top:10px;min-height:16px;}
+
+/* STEPS */
+.step{display:none;} .step.on{display:block;}
+
+/* FOOTER */
+.foot{background:var(--dk);padding:11px 18px;display:flex;align-items:center;justify-content:center;gap:5px;}
+.foot span{color:rgba(255,255,255,.45);font-size:10px;}
+.foot a{color:var(--ol);font-size:10px;font-weight:600;text-decoration:none;}
+
+/* ADMIN PANEL */
+#admin-panel{display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:14px 18px;font-size:11px;font-family:var(--f);z-index:9999;border-top:2px solid var(--or);}
+#admin-panel h4{color:var(--or);font-size:12px;margin-bottom:8px;}
+.adm-btn{background:var(--or);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--f);}
+.adm-info{color:#777;font-size:10px;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="lp">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <img src="https://www.polesupcallo.bzh/wp-content/uploads/2024/07/LOGO-POLE-SUP-CALLO-.avif" alt="Pôle Sup' Callo" loading="eager">
+    <div class="topbar-badge">
+      <i class="ti ti-headset"></i>
+      <!-- MODIFIABLE : badge filière -->
+      <span>BTS CCST</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <!-- MODIFIABLE : titre hero -->
+    <h1>Suivi de nos échanges<br>en lien avec ton <span>Parcours Post-Bac</span></h1>
+    <p class="hero-sub">Bac+2 · Alternance · Commerce B2B</p>
+    <div class="timer-pill">
+      <i class="ti ti-clock"></i>
+      <span>Moins d'1 min</span>
+    </div>
+  </div>
+
+  <!-- STAT BAR -->
+  <div class="sbar">
+    <div class="sbar-row">
+      <span class="sbar-n">100%*</span>
+      <span class="sbar-l">des étudiants coachés<br>ont trouvé leur alternance</span>
+    </div>
+    <p class="sbar-disc">* En cas d'application de l'ensemble de nos préconisations sur un accompagnement personnalisé</p>
+  </div>
+
+  <div class="body">
+
+    <!-- PROGRESSION -->
+    <div class="prog" id="prog-wrap">
+      <div class="prog-hd">
+        <span class="prog-lbl" id="prog-lbl">ÉTAPE 1 SUR 3</span>
+        <span class="prog-pct" id="prog-pct">33%</span>
+      </div>
+      <div class="prog-bar">
+        <div class="seg act" id="seg1"></div>
+        <div class="seg" id="seg2"></div>
+        <div class="seg" id="seg3"></div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 1 -->
+    <div class="step on" id="s1">
+      <p class="qlbl">Ta situation actuelle :</p>
+      <div class="opts" id="s1opts">
+
+        <!-- Trouvé -->
+        <div class="opt" onclick="pick1(this,'found')">
+          <div class="ck"><i class="ti ti-check"></i></div>
+          <div class="ic">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#E6F4EA"/>
+              <rect x="8" y="25" width="28" height="13" rx="2" fill="#2E7D50" opacity=".9"/>
+              <rect x="11" y="20" width="9" height="5" rx="1" fill="#2E7D50"/>
+              <rect x="24" y="18" width="9" height="7" rx="1" fill="#2E7D50"/>
+              <rect x="13" y="13" width="3" height="7" rx="1.5" fill="#4CAF7D"/>
+              <rect x="27" y="11" width="3" height="7" rx="1.5" fill="#4CAF7D"/>
+              <ellipse cx="14.5" cy="12" rx="2" ry="1.5" fill="#A5D6B0" opacity=".7"/>
+              <ellipse cx="28.5" cy="10" rx="2" ry="1.5" fill="#A5D6B0" opacity=".7"/>
+              <rect x="11" y="27" width="4" height="4" rx="1" fill="#A5D6B0"/>
+              <rect x="20" y="27" width="4" height="4" rx="1" fill="#A5D6B0"/>
+              <rect x="29" y="27" width="4" height="4" rx="1" fill="#A5D6B0"/>
+              <circle cx="34" cy="13" r="6" fill="#2E7D50"/>
+              <polyline points="31,13 33,15.5 37,11" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="opt-tx"><div class="ot">J'ai déjà trouvé mon alternance</div><div class="os">Mon entreprise est trouvée</div></div>
+        </div>
+
+        <!-- Recherche -->
+        <div class="opt" onclick="pick1(this,'search')">
+          <div class="ck"><i class="ti ti-check"></i></div>
+          <div class="ic">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#FFF3E0"/>
+              <circle cx="19" cy="19" r="9" stroke="#C06A08" stroke-width="2.2" fill="none"/>
+              <line x1="25.5" y1="25.5" x2="34" y2="34" stroke="#C06A08" stroke-width="2.6" stroke-linecap="round"/>
+              <rect x="14.5" y="18" width="9" height="5.5" rx="1.2" fill="#C06A08" opacity=".75"/>
+              <path d="M16.5 18v-2a2.5 2.5 0 015 0v2" stroke="#C06A08" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+              <line x1="19" y1="20" x2="19" y2="22.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="opt-tx"><div class="ot">Je recherche une entreprise</div><div class="os">Je candidate, pas encore trouvé</div></div>
+        </div>
+
+        <!-- Hésitation -->
+        <div class="opt" onclick="pick1(this,'hesi')">
+          <div class="ck"><i class="ti ti-check"></i></div>
+          <div class="ic">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#EDE7F6"/>
+              <circle cx="22" cy="22" r="12" stroke="#6A3CB5" stroke-width="2" fill="none"/>
+              <circle cx="22" cy="22" r="2.8" fill="#6A3CB5"/>
+              <polygon points="22,9 20.5,21.5 22,19.5 23.5,21.5" fill="#F4681A"/>
+              <polygon points="22,35 20.5,22.5 22,24.5 23.5,22.5" fill="#6A3CB5" opacity=".5"/>
+              <line x1="22" y1="9" x2="22" y2="12" stroke="#F4681A" stroke-width="1.5"/>
+              <text x="19.5" y="8.5" font-size="4.5" fill="#6A3CB5" font-family="Arial" font-weight="700">N</text>
+            </svg>
+          </div>
+          <div class="opt-tx"><div class="ot">J'hésite encore sur ma filière</div><div class="os">Je ne sais pas encore</div></div>
+        </div>
+
+        <!-- Autre formation -->
+        <div class="opt" onclick="pick1(this,'other')">
+          <div class="ck"><i class="ti ti-check"></i></div>
+          <div class="ic">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#E3F2FD"/>
+              <polygon points="22,9 37,17 22,25 7,17" fill="#1565B8" opacity=".85"/>
+              <path d="M12 19v8c0 2.5 4.5 5.5 10 5.5s10-3 10-5.5v-8" stroke="#1565B8" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <line x1="37" y1="17" x2="37" y2="28" stroke="#1565B8" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="37" cy="30.5" r="2.5" fill="#F4681A"/>
+              <polyline points="34,27.5 37,30.5 40,27.5" stroke="#F4681A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="opt-tx"><div class="ot">Je m'oriente vers une autre formation</div><div class="os">Mon choix est fait ailleurs</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PARCOURS 1 : DÉJÀ TROUVÉ -->
+    <div class="step" id="s2a">
+      <div class="nav"><button class="back" onclick="goBack('s1')"><i class="ti ti-arrow-left"></i> Retour</button><span class="nav-lbl">Ta formation choisie</span></div>
+      <!-- MODIFIABLE : libellé -->
+      <p class="qlbl">Quelle formation suis-tu l'année prochaine ?</p>
+      <div class="field">
+        <label class="fl">Sélectionne ta formation</label>
+        <select id="sel-form" onchange="onFormChange()">
+          <option value="">Choisis ta formation…</option>
+          <optgroup label="🎓 Formations Pôle Sup' Callo">
+            <!-- MODIFIABLE : value doit commencer par "callo-" -->
+            <option value="callo-bachelor-ma">Bachelor MA – Maintenance Avancée</option>
+            <option value="callo-bachelor-ip">Bachelor IP – Intégration des Procédés</option>
+            <option value="callo-bts-mv">BTS MV – Maintenance des Véhicules</option>
+            <option value="callo-bts-ms">BTS MS – Maintenance des Systèmes</option>
+            <option value="callo-bts-elt">BTS ELT – Électrotechnique</option>
+            <option value="callo-bts-cprp">BTS CPRP – Conception des Processus</option>
+            <option value="callo-bts-cpi">BTS CPI – Conception de Produits Industriels</option>
+            <option value="callo-bts-ccst">BTS CCST – Conseil et Commercialisation Solutions Techniques</option>
+          </optgroup>
+          <optgroup label="Autres parcours">
+            <option value="autre-form">Autre formation</option>
+            <option value="vie-active">Vie active / expatriation / autre…</option>
+          </optgroup>
+        </select>
+      </div>
+      <div id="bloc-callo" style="display:none;">
+        <div class="ib">
+          <strong>Félicitations !</strong> Malgré notre suivi, nous n'en avions pas encore connaissance. Notre chargée de relation entreprise te contacte pour t'aider à <strong>finaliser ton contrat BTS CCST</strong>.
+        </div>
+        <div class="field">
+          <label class="fl"><i class="ti ti-phone"></i> Ton numéro de téléphone <span style="font-weight:400;color:var(--t3);">(optionnel)</span></label>
+          <input type="tel" id="tel-2a" placeholder="06 XX XX XX XX">
+          <p class="fh">Rappel personnalisé · Finalisation contrat BTS CCST</p>
+        </div>
+        <button class="cta" onclick="submit('found-callo')"><i class="ti ti-send"></i> Finaliser mon dossier</button>
+      </div>
+      <div id="bloc-autre-form" style="display:none;">
+        <div class="r2">
+          <div class="field"><label class="fl">Formation</label><input type="text" id="fa-nom" placeholder="Nom…"></div>
+          <div class="field"><label class="fl">Ville</label><input type="text" id="fa-ville" placeholder="Ex : Rennes"></div>
+        </div>
+        <button class="cta sl" onclick="submit('found-other')"><i class="ti ti-send"></i> Envoyer</button>
+      </div>
+      <div id="bloc-vie-active" style="display:none;">
+        <div class="field"><label class="fl">Précise ta situation <span style="font-weight:400;color:var(--t3);">(optionnel)</span></label><input type="text" id="fa-vie" placeholder="Ex : CDI trouvé, départ à l'étranger…"></div>
+        <button class="cta sl" onclick="submit('found-other')"><i class="ti ti-send"></i> Envoyer</button>
+      </div>
+    </div>
+
+    <!-- PARCOURS 2 : RECHERCHE -->
+    <div class="step" id="s2b">
+      <div class="nav"><button class="back" onclick="goBack('s1')"><i class="ti ti-arrow-left"></i> Retour</button><span class="nav-lbl">Bilan de ta recherche</span></div>
+      <div class="ib">Quelques questions pour mieux t'accompagner.</div>
+      <p class="qlbl">Depuis combien de temps cherches-tu ?</p>
+      <div class="opts" style="flex-direction:row;flex-wrap:wrap;" id="duree-opts">
+        <div class="opt" style="flex:0 0 auto;padding:7px 10px;" onclick="pickSingle(this,'duree-opts')" data-v="1"><div class="ck"><i class="ti ti-check"></i></div><span>1 mois</span></div>
+        <div class="opt" style="flex:0 0 auto;padding:7px 10px;" onclick="pickSingle(this,'duree-opts')" data-v="2"><div class="ck"><i class="ti ti-check"></i></div><span>2 mois</span></div>
+        <div class="opt" style="flex:0 0 auto;padding:7px 10px;" onclick="pickSingle(this,'duree-opts')" data-v="3"><div class="ck"><i class="ti ti-check"></i></div><span>3 mois</span></div>
+        <div class="opt" style="flex:0 0 auto;padding:7px 10px;" onclick="pickSingle(this,'duree-opts')" data-v="4"><div class="ck"><i class="ti ti-check"></i></div><span>4 mois</span></div>
+        <div class="opt" style="flex:0 0 auto;padding:7px 10px;" onclick="pickSingle(this,'duree-opts')" data-v="5"><div class="ck"><i class="ti ti-check"></i></div><span>5 mois</span></div>
+      </div>
+      <div class="r2">
+        <div class="field"><label class="fl">Candidatures envoyées</label><input type="number" id="nb-cand" min="0" max="1000" placeholder="0"></div>
+        <div class="field"><label class="fl">Entretiens total</label><input type="number" id="nb-entr" min="0" max="500" placeholder="0" oninput="toggleMoods()"></div>
+      </div>
+      <!-- Détail visio/physique — masqué si 0 entretiens -->
+      <div id="bloc-entr-detail" style="display:none;">
+        <div class="r2">
+          <div class="field"><label class="fl">dont Visio</label><input type="number" id="nb-visio" min="0" placeholder="0"></div>
+          <div class="field"><label class="fl">dont Physique</label><input type="number" id="nb-physique" min="0" placeholder="0"></div>
+        </div>
+      </div>
+      <!-- Humeur — masquée si 0 entretiens -->
+      <div id="bloc-mood" style="display:none;">
+        <p class="qlbl">Comment se sont passés globalement tes entretiens ?</p>
+        <div class="moods" id="mood-opts">
+          <div class="mood" onclick="pickMood(this)" data-v="Bof"><span class="me">😐</span>Bof</div>
+          <div class="mood" onclick="pickMood(this)" data-v="Moyen"><span class="me">😕</span>Moyen</div>
+          <div class="mood" onclick="pickMood(this)" data-v="Ça va"><span class="me">🙂</span>Ça va</div>
+          <div class="mood" onclick="pickMood(this)" data-v="Au top"><span class="me">💪</span>Au top</div>
+        </div>
+      </div>
+      <p class="qlbl">Ta démarche en ce moment ?</p>
+      <div class="opts" id="ressenti-opts">
+        <div class="opt" onclick="pickSingle(this,'ressenti-opts')" data-v="Je peux mieux faire"><div class="ck"><i class="ti ti-check"></i></div><span>Je peux mieux faire</span></div>
+        <div class="opt" onclick="pickSingle(this,'ressenti-opts')" data-v="Ça va"><div class="ck"><i class="ti ti-check"></i></div><span>Ça va</span></div>
+        <div class="opt" onclick="pickSingle(this,'ressenti-opts')" data-v="J'ai besoin d'aide"><div class="ck"><i class="ti ti-check"></i></div><span>J'ai besoin d'aide</span></div>
+      </div>
+      <div class="r2">
+        <div class="field"><label class="fl">Zone de recherche</label><input type="text" id="zone-rech" placeholder="Ex : Redon, Rennes…"></div>
+        <div class="field"><label class="fl">Rayon</label>
+          <select id="rayon-rech">
+            <option>10 km</option><option>20 km</option><option selected>30 km</option><option>50 km</option><option>100 km</option><option>France entière</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label class="fl">Secteur prioritaire</label><input type="text" id="secteur-rech" placeholder="Ex : Industrie, Commerce…"></div>
+      <p class="sep">Tes coordonnées</p>
+      <div class="field">
+        <label class="fl"><i class="ti ti-phone"></i> Ton numéro de téléphone <span style="font-weight:400;color:var(--t3);">(optionnel)</span></label>
+        <input type="tel" id="tel-2b" placeholder="06 XX XX XX XX">
+        <p class="fh">Coach spécialisé BTS CCST · Rappel sous 48h</p>
+      </div>
+      <button class="cta" onclick="submit('search')"><i class="ti ti-rocket"></i> Activer mon coaching alternance</button>
+    </div>
+
+    <!-- PARCOURS 3 : HÉSITATION -->
+    <div class="step" id="s2c">
+      <div class="nav"><button class="back" onclick="goBack('s1')"><i class="ti ti-arrow-left"></i> Retour</button><span class="nav-lbl">Tes formations préférées</span></div>
+      <p class="qlbl">Quelles formations t'intéressent ?</p>
+      <p class="qhint">Jusqu'à 3 formations, par ordre de priorité — <span style="color:#555f00;font-weight:700;">vert = Pôle Sup' Callo</span></p>
+      <div class="chips" id="chip-wrap">
+        <!-- MODIFIABLE : chips formations -->
+        <span class="chip callo" onclick="pickChip(this)" data-f="BTS CCST">BTS CCST — Pôle Sup' Callo</span>
+        <span class="chip" onclick="pickChip(this)" data-f="BTS NDRC">BTS NDRC</span>
+        <span class="chip" onclick="pickChip(this)" data-f="BTS MCO">BTS MCO</span>
+        <span class="chip" onclick="pickChip(this)" data-f="BUT TC">BUT TC</span>
+        <span class="chip" onclick="pickChip(this)" data-f="Bachelor Commerce B to B">Bachelor Commerce B to B</span>
+        <span class="chip" onclick="pickChip(this)" data-f="Titre RNCP Technico-Commercial">Titre RNCP Technico-Commercial</span>
+      </div>
+      <div id="chip-order"><p>Ton ordre de priorité :</p><div id="chip-list"></div></div>
+      <div class="r2">
+        <div class="field"><label class="fl">Autre formation 1 <span style="font-weight:400;color:var(--t3);">(opt.)</span></label><input type="text" id="hesi-autre1" placeholder="Nom…"></div>
+        <div class="field"><label class="fl">Autre formation 2 <span style="font-weight:400;color:var(--t3);">(opt.)</span></label><input type="text" id="hesi-autre2" placeholder="Nom…"></div>
+      </div>
+      <p class="sep">Tes coordonnées</p>
+      <div class="field">
+        <label class="fl"><i class="ti ti-phone"></i> Ton numéro de téléphone <span style="font-weight:400;color:var(--t3);">(optionnel)</span></label>
+        <input type="tel" id="tel-2c" placeholder="06 XX XX XX XX">
+        <p class="fh">Bilan d'orientation gratuit · Rappel sous 24h</p>
+      </div>
+      <button class="cta" onclick="submit('hesi')"><i class="ti ti-target"></i> Je veux mon bilan d'orientation</button>
+    </div>
+
+    <!-- PARCOURS 4 : AUTRE FORMATION -->
+    <div class="step" id="s2d">
+      <div class="nav"><button class="back" onclick="goBack('s1')"><i class="ti ti-arrow-left"></i> Retour</button><span class="nav-lbl">Ton choix</span></div>
+      <div class="ib" style="border-color:rgba(69,81,86,.2);background:var(--sl-l);">
+        Tu as fait ton choix — décider, c'est avancer. <strong>Notre établissement respecte ta décision et ne te recontactera plus.</strong><br>Merci de nous indiquer ta formation pour notre suivi statistique.
+      </div>
+      <div class="field"><label class="fl">Nom de ta formation</label><input type="text" id="other-nom" placeholder="Ex : BUT GMP, Licence Pro…"></div>
+      <div class="field"><label class="fl">Ville <span style="font-weight:400;color:var(--t3);">(optionnel)</span></label><input type="text" id="other-ville" placeholder="Ex : Rennes, Nantes…"></div>
+      <button class="cta sl" onclick="submit('other')"><i class="ti ti-send"></i> Envoyer et terminer</button>
+    </div>
+
+    <!-- CONFIRMATION -->
+    <div class="step" id="s3">
+      <div class="cf">
+        <div class="cf-ic" id="c-icon"></div>
+        <h3 id="c-title"></h3>
+        <div class="cf-msg" id="c-msg"></div>
+        <button class="cf-cta" id="c-cta" onclick="window.open('https://www.polesupcallo.bzh/candidature/','_blank')">
+          <i class="ti ti-external-link"></i> Voir nos formations
+        </button>
+        <p class="cf-send-status" id="send-status"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>Pôle Sup' Marcel Callo · BTS CCST 2026 ·</span>
+    <a href="https://www.polesupcallo.bzh" target="_blank">polesupcallo.bzh</a>
+  </div>
+</div>
+
+<!-- ADMIN PANEL — visible uniquement avec ?admin=1 dans l'URL -->
+<div id="admin-panel">
+  <h4>⚙️ Panel Admin KPI — session en cours</h4>
+  <p id="admin-info" style="color:#aaa;font-size:10px;margin-bottom:10px;">En attente de réponses…</p>
+  <button class="adm-btn" onclick="adminExport()">⬇ Télécharger CSV session</button>
+  <p class="adm-info">Les données réelles sont dans Google Sheets · Ce CSV = session courante uniquement</p>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   CONFIG — MODIFIER ICI UNIQUEMENT POUR DUPLIQUER
+   ════════════════════════════════════════════════════════ */
+var CONFIG = {
+  formation:    'BTS CCST',
+  etablissement:'Pole Sup Callo',
+  annee:        '2026',
+  /* Coller ici l'URL de déploiement du Google Apps Script après installation */
+  scriptUrl:    'VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI'
+};
+
+/* ════════════════════════════════════════════════════════
+   ÉTAT
+   ════════════════════════════════════════════════════════ */
+var v1 = null, chipSel = [], sessionData = [];
+
+/* ════════════════════════════════════════════════════════
+   PROGRESSION
+   ════════════════════════════════════════════════════════ */
+function setProg(s,t){
+  document.getElementById('prog-pct').textContent = Math.round((s/t)*100)+'%';
+  document.getElementById('prog-lbl').textContent = 'ETAPE '+s+' SUR '+t;
+  ['seg1','seg2','seg3'].forEach(function(id,i){
+    var el=document.getElementById(id);
+    el.classList.remove('done','act');
+    if(i<s-1) el.classList.add('done');
+    else if(i===s-1) el.classList.add('act');
+  });
+}
+function showStep(id){
+  ['s1','s2a','s2b','s2c','s2d','s3'].forEach(function(s){document.getElementById(s).classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ════════════════════════════════════════════════════════
+   INTERACTIONS
+   ════════════════════════════════════════════════════════ */
+function pick1(el,val){
+  v1=val;
+  document.querySelectorAll('#s1opts .opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  setTimeout(function(){
+    setProg(2,3);
+    showStep({found:'s2a',search:'s2b',hesi:'s2c',other:'s2d'}[val]);
+  },220);
+}
+function goBack(id){setProg(1,3);showStep(id);}
+function pickSingle(el,gid){
+  document.querySelectorAll('#'+gid+' .opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+}
+function pickMood(el){
+  document.querySelectorAll('#mood-opts .mood').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+}
+function toggleMoods(){
+  var n=parseInt(document.getElementById('nb-entr').value)||0;
+  document.getElementById('bloc-mood').style.display = n>0?'block':'none';
+  document.getElementById('bloc-entr-detail').style.display = n>0?'block':'none';
+}
+function pickChip(el){
+  var fn=el.getAttribute('data-f');
+  var idx=chipSel.indexOf(fn);
+  if(idx>=0){
+    chipSel.splice(idx,1);
+    el.classList.remove('sel');
+    var b=el.querySelector('.chip-badge'); if(b) b.remove();
+    document.querySelectorAll('#chip-wrap .chip.sel').forEach(function(c,i){
+      var b2=c.querySelector('.chip-badge'); if(b2) b2.textContent=i+1;
+    });
+  } else {
+    if(chipSel.length>=3) return;
+    chipSel.push(fn);
+    el.classList.add('sel');
+    var bg=document.createElement('span');
+    bg.className='chip-badge'; bg.textContent=chipSel.length;
+    el.appendChild(bg);
+  }
+  renderOrder();
+}
+function renderOrder(){
+  var w=document.getElementById('chip-order');
+  var l=document.getElementById('chip-list');
+  if(chipSel.length===0){w.style.display='none';return;}
+  w.style.display='block'; l.innerHTML='';
+  chipSel.forEach(function(fn,i){
+    var s=document.createElement('span');
+    s.style.cssText='display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;background:#FFF3EC;border:1px solid #F4681A;font-size:11px;color:#F4681A;font-weight:700;';
+    s.innerHTML='<span style="background:#F4681A;color:#fff;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;">'+(i+1)+'</span> '+fn;
+    l.appendChild(s);
+  });
+}
+function onFormChange(){
+  var v=document.getElementById('sel-form').value;
+  document.getElementById('bloc-callo').style.display      = v.startsWith('callo')?'block':'none';
+  document.getElementById('bloc-autre-form').style.display = (v==='autre-form')?'block':'none';
+  document.getElementById('bloc-vie-active').style.display = (v==='vie-active')?'block':'none';
+}
+
+/* ════════════════════════════════════════════════════════
+   COLLECTE DONNÉES
+   ════════════════════════════════════════════════════════ */
+function gv(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function gsel(gid){var el=document.querySelector('#'+gid+' .opt.sel');return el?(el.getAttribute('data-v')||''):''}
+function gmood(){var el=document.querySelector('#mood-opts .mood.sel');return el?el.getAttribute('data-v'):'';}
+
+function collectData(type){
+  var row={
+    timestamp:    new Date().toLocaleString('fr-FR'),
+    formation:    CONFIG.formation,
+    etablissement:CONFIG.etablissement,
+    annee:        CONFIG.annee,
+    parcours:     type
+  };
+  if(type==='found-callo'){
+    row.formation_choisie = gv('sel-form');
+    row.telephone         = gv('tel-2a');
+  }
+  if(type==='found-other'){
+    var sf=gv('sel-form');
+    row.formation_choisie = sf==='autre-form'?gv('fa-nom'):(sf==='vie-active'?gv('fa-vie'):sf);
+    row.ville             = sf==='autre-form'?gv('fa-ville'):'';
+  }
+  if(type==='search'){
+    row.duree_recherche_mois  = gsel('duree-opts');
+    row.nb_candidatures       = gv('nb-cand');
+    row.nb_entretiens_total   = gv('nb-entr');
+    row.nb_entretiens_visio   = gv('nb-visio');
+    row.nb_entretiens_physique= gv('nb-physique');
+    row.feedback_entretiens   = gmood();
+    row.demarche              = gsel('ressenti-opts');
+    row.zone_recherche        = gv('zone-rech');
+    row.rayon                 = gv('rayon-rech');
+    row.secteur               = gv('secteur-rech');
+    row.telephone             = gv('tel-2b');
+  }
+  if(type==='hesi'){
+    row.formations_priorite = chipSel.join(' | ');
+    row.autre_formation_1   = gv('hesi-autre1');
+    row.autre_formation_2   = gv('hesi-autre2');
+    row.telephone           = gv('tel-2c');
+  }
+  if(type==='other'){
+    row.formation_nom  = gv('other-nom');
+    row.formation_ville= gv('other-ville');
+  }
+  return row;
+}
+
+/* ════════════════════════════════════════════════════════
+   ENVOI GOOGLE SHEETS
+   ════════════════════════════════════════════════════════ */
+function sendToSheets(data){
+  var statusEl=document.getElementById('send-status');
+  sessionData.push(data);
+  if(!CONFIG.scriptUrl||CONFIG.scriptUrl.indexOf('VOTRE_URL')>=0){
+    statusEl.textContent='(Mode test — URL Apps Script non configurée)';
+    return;
+  }
+  statusEl.textContent='Envoi en cours…';
+  fetch(CONFIG.scriptUrl,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(data)
+  }).then(function(){
+    statusEl.textContent='';
+  }).catch(function(){
+    statusEl.textContent='⚠ Erreur réseau — données non envoyées';
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   SOUMISSION
+   ════════════════════════════════════════════════════════ */
+function submit(type){
+  sendToSheets(collectData(type));
+  setProg(3,3);
+  document.getElementById('prog-wrap').style.display='none';
+  showStep('s3');
+  var ic=document.getElementById('c-icon');
+  var ti=document.getElementById('c-title');
+  var ms=document.getElementById('c-msg');
+  var ct=document.getElementById('c-cta');
+  ct.style.display='flex';
+
+  if(type==='found-callo'){
+    ic.style.background='#B7BD2D';
+    ic.innerHTML='<i class="ti ti-trophy" style="font-size:26px;color:#fff;"></i>';
+    ti.style.color='#B7BD2D'; ti.textContent='Félicitations !';
+    ms.innerHTML='Tu as décroché ton alternance ! <strong>Malgré notre suivi, nous n\'en avions pas encore connaissance.</strong><br><br>Notre chargée de relation entreprise te contacte pour t\'aider à <strong>finaliser ton contrat BTS CCST</strong> dans les meilleures conditions.';
+    ct.innerHTML='<i class="ti ti-external-link"></i> Finaliser ma candidature';
+  } else if(type==='found-other'){
+    ic.style.background='#455156';
+    ic.innerHTML='<i class="ti ti-check" style="font-size:26px;color:#fff;"></i>';
+    ti.style.color='#455156'; ti.textContent='Merci pour ton retour !';
+    ms.innerHTML='Bonne continuation ! <strong>Nos portes restent ouvertes</strong> si tu changes de cap.';
+    ct.style.display='none';
+  } else if(type==='search'){
+    ic.style.background='#F4681A';
+    ic.innerHTML='<i class="ti ti-rocket" style="font-size:26px;color:#fff;"></i>';
+    ti.style.color='#F4681A'; ti.textContent='Coaching activé !';
+    ms.innerHTML='Les technico-commerciaux sont parmi les profils les plus recherchés en B2B. Coach <strong>sous 48h</strong>.';
+    ct.innerHTML='<i class="ti ti-external-link"></i> Voir nos formations';
+  } else if(type==='hesi'){
+    ic.style.background='#F4681A';
+    ic.innerHTML='<i class="ti ti-target" style="font-size:26px;color:#fff;"></i>';
+    ti.style.color='#F4681A'; ti.textContent='Bilan lancé !';
+    ms.innerHTML='CCST, NDRC ou BUT TC ? On t\'explique les différences concrètes <strong>sous 24h</strong>.';
+    ct.innerHTML='<i class="ti ti-external-link"></i> Découvrir nos formations';
+  } else {
+    ic.style.background='#455156';
+    ic.innerHTML='<i class="ti ti-check" style="font-size:26px;color:#fff;"></i>';
+    ti.style.color='#455156'; ti.textContent='Merci pour ton retour !';
+    ms.innerHTML='Tu as fait ton choix — décider, c\'est avancer. <strong>Nous respectons ta décision et ne te recontacterons plus.</strong><br>Bonne réussite dans ton parcours.';
+    ct.style.display='none';
+  }
+  if(document.getElementById('admin-panel').style.display!=='none') updateAdminInfo();
+}
+
+/* ════════════════════════════════════════════════════════
+   ADMIN
+   ════════════════════════════════════════════════════════ */
+function updateAdminInfo(){
+  document.getElementById('admin-info').textContent=
+    sessionData.length+' réponse(s) · '+CONFIG.formation+' '+CONFIG.annee+' · Google Sheets est la source principale';
+}
+function adminExport(){
+  if(sessionData.length===0){alert('Aucune donnée cette session.');return;}
+  var cols=[];
+  sessionData.forEach(function(r){Object.keys(r).forEach(function(k){if(cols.indexOf(k)<0)cols.push(k);});});
+  var csv=cols.join(';')+'\n';
+  sessionData.forEach(function(r){
+    csv+=cols.map(function(c){return '"'+(r[c]||'').toString().replace(/"/g,'""')+'"';}).join(';')+'\n';
+  });
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=CONFIG.formation.replace(/\s/g,'-')+'-'+CONFIG.annee+'-export.csv';
+  a.click();
+}
+
+/* ════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════ */
+(function(){
+  if(window.location.search.indexOf('admin=1')>=0){
+    document.getElementById('admin-panel').style.display='block';
+  }
+})();
+</script>
+</body>
+</html>

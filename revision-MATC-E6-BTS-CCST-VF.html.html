@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Révision MATC E6 — BTS CCST — Pôle Sup Callo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#2596be;--blue-dk:#1a6e8e;--blue-lt:#d7eef6;--blue-xlt:#edf8fd;
+  --olive:#b7bd34;--olive-dk:#8d9227;--olive-lt:#edf0c2;
+  --red:#e05b5b;--red-lt:#fdecea;--red-dk:#c0392b;
+  --green:#27ae60;--green-lt:#eafaf1;
+  --orange:#e67e22;--grey:#e5e5e3;--grey-lt:#f7f7f5;
+  --dark:#1e2a30;--text:#2d3a40;--white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:var(--grey-lt);color:var(--text);line-height:1.65}
+
+.header{background:var(--blue);color:#fff;position:relative;overflow:hidden}
+.header::before{content:"";position:absolute;top:-60px;right:-80px;width:340px;height:340px;background:var(--olive);border-radius:50%;opacity:.14}
+.header-inner{max-width:960px;margin:0 auto;padding:32px 28px 28px;position:relative;z-index:1}
+.header-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.logo{width:52px;height:52px;border-radius:10px;background:#fff;padding:4px;object-fit:contain;flex-shrink:0}
+.school{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+h1{font-family:"DM Serif Display",serif;font-size:clamp(22px,4vw,34px);line-height:1.15;margin-bottom:8px}
+.header-sub{font-size:14px;opacity:.88;max-width:580px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:500}
+.pill.accent{background:var(--olive);border-color:var(--olive);color:var(--dark)}
+
+.tab-nav-wrap{background:var(--blue-dk);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.tab-nav{max-width:960px;margin:0 auto;display:flex;overflow-x:auto;padding:0 20px;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{padding:13px 16px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s;font-family:"DM Sans",sans-serif}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{color:#fff;border-bottom-color:var(--olive)}
+
+.container{max-width:960px;margin:0 auto;padding:36px 24px 80px}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+.sec-label{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:5px}
+.sec-title{font-family:"DM Serif Display",serif;font-size:24px;color:var(--dark);margin-bottom:18px}
+
+.card{background:#fff;border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-blue{border-left:4px solid var(--blue)}
+.card-olive{border-left:4px solid var(--olive)}
+.card-green{border-left:4px solid var(--green)}
+.card h3{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:10px}
+.card p,.card li{font-size:14.5px;line-height:1.65}
+.card ul{padding-left:18px;margin-top:8px}
+.card li{margin-bottom:5px}
+
+.alert{border-radius:11px;padding:15px 18px;margin-bottom:18px;display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.6}
+.a-info{background:var(--blue-lt)}.a-warn{background:#fff5e0;border:1px solid #f0c060}
+.a-ok{background:var(--green-lt);border:1px solid #a9dfbf}.a-err{background:var(--red-lt);border:1px solid #f5b7b1}
+.alert-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.alert strong{display:block;font-size:14.5px;margin-bottom:3px}
+
+.box2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:620px){.box2{grid-template-columns:1fr}}
+.concept{background:#fff;border-radius:14px;overflow:hidden;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.con-hd{padding:12px 18px;font-weight:700;font-size:13px;color:#fff;display:flex;align-items:center;gap:8px}
+.con-hd.blue{background:var(--blue)}.con-hd.olive{background:var(--olive-dk)}
+.con-hd.red{background:var(--red-dk)}.con-hd.green{background:var(--green)}
+.con-body{padding:18px;font-size:14px;line-height:1.65}
+.con-body ul{padding-left:18px;margin-top:8px}
+.con-body li{margin-bottom:5px}
+
+.formula{background:var(--blue-xlt);border:2px solid var(--blue-lt);border-radius:10px;padding:13px 16px;margin:12px 0;font-size:14px;font-weight:600;color:var(--blue-dk);text-align:center}
+.formula.olive{background:var(--olive-lt);border-color:var(--olive);color:var(--olive-dk)}
+.formula.green{background:var(--green-lt);border-color:#a9dfbf;color:var(--green)}
+
+.steps{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.step{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:10px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.sn{min-width:26px;height:26px;border-radius:7px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.sn.olive{background:var(--olive-dk)}.sn.red{background:var(--red-dk)}
+.s-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px}
+.s-desc{font-size:13px;color:#555;line-height:1.55}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:18px}
+.tbl th{background:var(--blue);color:#fff;padding:10px 12px;text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tbl th.olive{background:var(--olive-dk)}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--grey);vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:nth-child(even) td{background:var(--grey-lt)}
+.tbl td.r{text-align:right;font-weight:600;font-family:monospace}.tbl td.c{text-align:center}
+.good{color:var(--green);font-weight:700}.bad{color:var(--red-dk);font-weight:700}.warn{color:var(--orange);font-weight:700}
+
+.kpi-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px}
+.kpi-card.bl{border-left:4px solid var(--blue)}.kpi-card.ol{border-left:4px solid var(--olive)}.kpi-card.gr{border-left:4px solid var(--green)}
+.kpi-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.kpi-ex{font-size:12.5px;color:#555;margin-top:6px;line-height:1.55}
+
+.synth{background:#fff;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.synth-hd{padding:12px 18px;font-weight:700;font-size:13.5px;color:#fff}
+.synth-hd.blue{background:var(--blue)}.synth-hd.olive{background:var(--olive-dk)}.synth-hd.dark{background:var(--dark)}
+.synth-body{padding:16px 18px;font-size:14px;line-height:1.65}
+
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.chk-grid{grid-template-columns:1fr}}
+.chk-item{background:#fff;border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;font-size:13.5px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.chk-ico{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px}
+.chk-ico.ok{background:var(--olive-lt);color:var(--olive-dk)}.chk-ico.no{background:var(--red-lt);color:var(--red-dk)}
+
+.hr{height:1px;background:var(--grey);margin:28px 0}
+
+/* ── QUIZ ── */
+.score-bar{background:#fff;border-radius:14px;padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;gap:18px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.sc-circle{width:62px;height:62px;border-radius:50%;background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s}
+.sc-n{font-family:"DM Serif Display",serif;font-size:22px;line-height:1}
+.sc-t{font-size:11px;opacity:.8}
+.sc-label{flex:1;font-size:14px}
+.sc-label strong{display:block;font-size:16px;color:var(--dark)}
+.reset-btn{background:#fff;border:2px solid var(--grey);border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--text);transition:border-color .15s}
+.reset-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+.quiz-card{background:#fff;border-radius:14px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.qhd{padding:16px 18px 12px;background:var(--blue);color:#fff}
+.qhd.olive{background:var(--olive-dk)}.qhd.dark{background:var(--dark)}
+.qnum{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8;margin-bottom:4px}
+.qtext{font-size:14.5px;font-weight:600;line-height:1.4}
+.qbody{padding:18px}
+
+/* calc inputs */
+.calc-row{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}
+.calc-label{font-size:13.5px;flex:1;min-width:200px}
+.calc-input{border:2px solid var(--grey);border-radius:8px;padding:8px 12px;font-size:14px;font-family:monospace;width:140px;outline:none;transition:border-color .15s}
+.calc-input:focus{border-color:var(--blue)}
+.calc-input.correct{border-color:var(--green);background:var(--green-lt);color:var(--green)}
+.calc-input.wrong{border-color:var(--red);background:var(--red-lt);color:var(--red-dk)}
+.calc-unit{font-size:13px;color:#888;white-space:nowrap}
+
+/* buttons */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;transition:background .15s}
+.check-btn:hover{background:var(--blue-dk)}
+.check-btn:disabled{opacity:.5;cursor:default}
+.check-btn.olive{background:var(--olive-dk)}.check-btn.olive:hover{background:#6b6e1e}
+.check-btn.dark{background:var(--dark)}.check-btn.dark:hover{background:#111}
+
+/* feedback */
+.feedback{margin-top:12px;padding:12px 14px;border-radius:9px;font-size:13.5px;line-height:1.7;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:var(--green-lt);border:1px solid #a9dfbf}
+.feedback.ko{background:var(--red-lt);border:1px solid #f5b7b1}
+.feedback.partial{background:#fff5e0;border:1px solid #f0c060}
+
+/* QCM choices */
+.choices{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.choice-btn{padding:12px 16px;border-radius:10px;border:2px solid var(--grey);cursor:pointer;font-size:14px;transition:all .15s;background:#fff;text-align:left;width:100%;font-family:"DM Sans",sans-serif;line-height:1.4}
+.choice-btn:hover:not(:disabled){border-color:var(--blue);background:var(--blue-xlt)}
+.choice-btn.correct{border-color:var(--green);background:var(--green-lt);font-weight:600}
+.choice-btn.wrong{border-color:var(--red);background:var(--red-lt)}
+.choice-btn.reveal{border-color:var(--green);background:var(--green-lt);font-weight:600}
+.choice-btn:disabled{cursor:default}
+
+.quiz-sec-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--olive-dk);margin:24px 0 12px;padding:6px 12px;background:var(--olive-lt);border-radius:8px;display:inline-block}
+
+.footer{background:var(--dark);color:rgba(255,255,255,.55);text-align:center;padding:22px;font-size:12.5px;line-height:1.7}
+.footer strong{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <img class="logo" src="data:image/avif;base64,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ICAgICAgICA8QXR0cmliOkNyZWF0ZWQ+MjAyNC0wMS0yOTwvQXR0cmliOkNyZWF0ZWQ+CiAgICAgICAgPEF0dHJpYjpFeHRJZD43MTgxNjc2Yi0yMGE4LTQ1NDMtYTdhOS1hMTBkMjFkZDJhMWE8L0F0dHJpYjpFeHRJZD4KICAgICAgICA8QXR0cmliOkZiSWQ+NTI1MjY1OTE0MTc5NTgwPC9BdHRyaWI6RmJJZD4KICAgICAgICA8QXR0cmliOlRvdWNoVHlwZT4yPC9BdHRyaWI6VG91Y2hUeXBlPgogICAgICAgIDwvcmRmOmxpPgogICAgICAgIDwvcmRmOlNlcT4KICAgICAgICA8L0F0dHJpYjpBZHM+CiAgICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CgogICAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgICAgICAgeG1sbnM6cGRmPSdodHRwOi8vbnMuYWRvYmUuY29tL3BkZi8xLjMvJz4KICAgICAgICA8cGRmOkF1dGhvcj5NeXJpYW0gU09VTEVaPC9wZGY6QXV0aG9yPgogICAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgoKICAgICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0nJwogICAgICAgIHhtbG5zOnhtcD0naHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyc+CiAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5DYW52YTwveG1wOkNyZWF0b3JUb29sPgogICAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICAgICAgIAogICAgICAgIDwvcmRmOlJERj4KICAgICAgICA8L3g6eG1wbWV0YT4=" alt="Pole Sup Callo">
+      <div><div class="school">Pole Sup Marcel Callo &middot; BTS CCST 1ere annee</div></div>
+    </div>
+    <h1>Revision MATC E6<br>Les 4 competences cles</h1>
+    <div class="header-sub">Fiches methode + exemples concrets — Cas SOLARTEC (solutions photovoltaiques B2B)</div>
+    <div class="pills">
+      <span class="pill">📊 KPI &amp; Tableau de bord</span>
+      <span class="pill">🤝 Experience client</span>
+      <span class="pill">👤 Recrutement</span>
+      <span class="pill accent">📝 Synthese manageriale</span>
+    </div>
+  </div>
+</div>
+
+<div class="tab-nav-wrap">
+  <div class="tab-nav" id="tabnav">
+    <button class="tab-btn active" data-tab="kpi">📊 KPI &amp; Tableau de bord</button>
+    <button class="tab-btn" data-tab="xp">🤝 Experience client</button>
+    <button class="tab-btn" data-tab="recrut">👤 Recrutement</button>
+    <button class="tab-btn" data-tab="synth">📝 Synthese manageriale</button>
+    <button class="tab-btn" data-tab="quiz">🎯 Quiz auto-corrige</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===== KPI ===== -->
+<div class="tab-pane active" id="tab-kpi">
+  <div class="sec-label">Module 1 · MATC A2.4 — Evaluation de la performance commerciale</div>
+  <div class="sec-title">KPI et tableau de bord commercial</div>
+
+  <div class="alert a-warn">
+    <div class="alert-icon">⚠️</div>
+    <div><strong>Ce que les etudiants ratent le plus souvent</strong>
+    Calculer sans montrer les etapes intermediaires, oublier l'analyse apres les calculs. Le jury attend : calculs detailles + interpretation + recommandation manageriale.</div>
+  </div>
+
+  <div class="kpi-card bl">
+    <div class="kpi-title">📈 KPI 1 — Taux de realisation</div>
+    <div class="formula">Objectif CA N = CA (N-1) × (1 + taux d'evolution prevu)</div>
+    <div class="formula">Taux de realisation = (CA realise ÷ Objectif CA) × 100</div>
+    <div class="kpi-ex"><strong>Exemple SOLARTEC — Gamme Residentiel collectif :</strong><br>
+    CA 2023 = 380 000 € | Objectif +15% → Objectif 2024 = 380 000 × 1,15 = <strong>437 000 €</strong><br>
+    CA realise 2024 = 412 500 € → Taux = 412 500 ÷ 437 000 × 100 = <strong>94,4%</strong><br>
+    Ecart = 412 500 − 437 000 = <strong>−24 500 €</strong><br><br>
+    <strong>Lecture :</strong> &gt;100% = depassement ✅ | 95–100% = proche ⚠️ | &lt;95% = alerte 🔴</div>
+  </div>
+
+  <div class="kpi-card ol">
+    <div class="kpi-title">💰 KPI 2 — Taux de marque</div>
+    <div class="formula olive">Taux de marque = (Marge brute ÷ CA HT) × 100</div>
+    <div class="kpi-ex"><strong>Attention piege frequent :</strong> c'est Marge ÷ CA (taux de marque), pas Marge ÷ Cout d'achat (taux de marge).<br>
+    Exemple : Marge = 123 750 € | CA = 412 500 € → Taux marque = 30,0%</div>
+  </div>
+
+  <div class="kpi-card gr">
+    <div class="kpi-title">📊 KPI 3 — Evolution du CA</div>
+    <div class="formula green">Evolution CA = ((CA N − CA N-1) ÷ CA N-1) × 100</div>
+    <div class="kpi-ex">Exemple : (412 500 − 380 000) ÷ 380 000 × 100 = <strong>+8,6%</strong></div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec-label">Cas SOLARTEC — Tableau de bord equipe 2024</div>
+  <table class="tbl">
+    <tr><th>Gamme</th><th>CA 2023</th><th>Obj. evol.</th><th>Objectif 2024</th><th>CA Realise</th><th>Ecart</th><th>Taux real.</th><th>Taux marque</th></tr>
+    <tr><td>Residentiel collectif</td><td class="r">380 000</td><td class="c">+15%</td><td class="r">437 000</td><td class="r">412 500</td><td class="bad c">−24 500</td><td class="bad c">94,4%</td><td class="c">30,0%</td></tr>
+    <tr><td>Industrie &amp; tertiaire ★</td><td class="r">1 240 000</td><td class="c">+20%</td><td class="r">1 488 000</td><td class="r">1 536 800</td><td class="good c">+48 800</td><td class="good c">103,3%</td><td class="good c">34,2%</td></tr>
+    <tr><td>Collectivites &amp; agri.</td><td class="r">890 000</td><td class="c">+10%</td><td class="r">979 000</td><td class="r">921 300</td><td class="bad c">−57 700</td><td class="bad c">94,1%</td><td class="c">26,8%</td></tr>
+    <tr style="background:var(--blue-lt)"><td><strong>TOTAL</strong></td><td class="r"><strong>2 510 000</strong></td><td></td><td class="r"><strong>2 904 000</strong></td><td class="r"><strong>2 870 600</strong></td><td class="warn c">−33 400</td><td class="warn c">98,8%</td><td class="c">31,2%</td></tr>
+  </table>
+  <p style="font-size:12px;color:#888;margin-bottom:20px">★ Gamme prioritaire | Calcul Industrie : 1 240 000 × 1,20 = 1 488 000 € | Taux real. = 1 536 800 ÷ 1 488 000 × 100 = 103,3%</p>
+
+  <div class="card card-blue">
+    <h3>🔍 Analyse du tableau de bord SOLARTEC 2024</h3>
+    <p><strong>Global :</strong> l'equipe realise 98,8% de son objectif — satisfaisant mais deux gammes sont en retard.</p>
+    <ul>
+      <li><strong>Industrie &amp; tertiaire :</strong> 103,3% → gamme locomotive, a maintenir et recompenser</li>
+      <li><strong>Residentiel collectif :</strong> 94,4% → leger retard (−24 500 €), a relancer en S2</li>
+      <li><strong>Collectivites &amp; agriculture :</strong> 94,1% → retard le plus important (−57 700 €), point d'alerte prioritaire</li>
+    </ul>
+    <p style="margin-top:8px"><strong>Recommandation :</strong> concentrer les efforts TC sur la gamme Collectivites au S2 (prospection renforcee communes rurales et cooperatives agricoles).</p>
+  </div>
+</div>
+
+<!-- ===== EXPERIENCE CLIENT ===== -->
+<div class="tab-pane" id="tab-xp">
+  <div class="sec-label">Module 2 · MATC A2.3 — Referentiel BTS CCST</div>
+  <div class="sec-title">Experience client et parcours client</div>
+
+  <div class="alert a-info">
+    <div class="alert-icon">📖</div>
+    <div><strong>Ce que dit le referentiel CCST (A2.3)</strong>
+    T1 : Analyser les parcours et l'experience client. T2 : Participer a l'optimisation du parcours client. Competence attendue : identifier les points de friction et proposer des ameliorations mesurables.</div>
+  </div>
+
+  <div class="box2">
+    <div class="concept">
+      <div class="con-hd blue">🎯 Experience client</div>
+      <div class="con-body">
+        <p>Ensemble des <strong>perceptions et emotions</strong> ressenties lors de tous les contacts avec l'entreprise — avant, pendant et apres l'achat.</p>
+        <ul><li>Subjective (depend des attentes)</li><li>Globale (tous les points de contact)</li><li>≠ Satisfaction (mesure ponctuelle post-achat)</li></ul>
+      </div>
+    </div>
+    <div class="concept">
+      <div class="con-hd olive">🗺️ Parcours client</div>
+      <div class="con-body">
+        <p>Sequence de toutes les etapes vecues depuis la prise de conscience du besoin jusqu'a la fidelisation.</p>
+        <ul><li><strong>Point de contact :</strong> toute interaction client ↔ entreprise</li><li><strong>Moment de verite :</strong> contact critique qui influence la decision</li><li><strong>Point de friction :</strong> etape difficile, risque d'abandon</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-label">Les 4 Personas SOLARTEC</div>
+  <table class="tbl">
+    <tr><th>Persona</th><th>Profil</th><th>Canal prefere</th><th>Priorites</th><th>Decision</th></tr>
+    <tr><td><strong>Marc GUILLOT</strong></td><td>Directeur technique, promoteur immo.</td><td>Email + RDV physique</td><td>Conformite, ROI, delais</td><td>Co-decide avec DAF</td></tr>
+    <tr><td><strong>Sophie BERNARD</strong></td><td>Directrice exploitation, industrie</td><td>Telephone + visite terrain</td><td>Fiabilite, SAV reactif, TCO</td><td>Decisionnaire unique</td></tr>
+    <tr><td><strong>Paul VERNIER</strong></td><td>Elu municipal, commune 3 000 hab.</td><td>Reunion + appel d'offre</td><td>Transparence, prix, ecologie</td><td>Vote en conseil municipal</td></tr>
+    <tr><td><strong>Lucie MORIN</strong></td><td>Responsable achats, cooperative agri.</td><td>Salon + recommandations</td><td>Subventions, simplicite</td><td>Validee par le CA</td></tr>
+  </table>
+
+  <div class="card card-olive">
+    <h3>🔄 Le parcours client SOLARTEC — 6 etapes</h3>
+    <div class="steps">
+      <div class="step"><div class="sn olive">1</div><div><div class="s-title">Detection du besoin</div><div class="s-desc">Facture energetique trop elevee, obligation RE2020, objectif RSE. Canal : Google, salon, recommandation.</div></div></div>
+      <div class="step"><div class="sn olive">2</div><div><div class="s-title">Audit energetique — Prise de contact TC</div><div class="s-desc">Visite de site, analyse de consommation, proposition dimensionnee. <strong>Moment de verite n°1</strong> : qualite du diagnostic.</div></div></div>
+      <div class="step"><div class="sn olive">3</div><div><div class="s-title">Remise du devis et negociation</div><div class="s-desc">Proposition chiffree avec calcul du ROI. <strong>Point de friction frequent :</strong> delai de remise trop long (&gt;10 jours).</div></div></div>
+      <div class="step"><div class="sn olive">4</div><div><div class="s-title">Installation et mise en service</div><div class="s-desc"><strong>Moment de verite n°2</strong> : respect des delais et qualite de l'installation.</div></div></div>
+      <div class="step"><div class="sn olive">5</div><div><div class="s-title">Suivi post-installation et SAV</div><div class="s-desc"><strong>Point de friction majeur :</strong> manque de suivi et temps d'intervention SAV trop longs. Impact direct sur le NPS.</div></div></div>
+      <div class="step"><div class="sn olive">6</div><div><div class="s-title">Fidelisation et extension</div><div class="s-desc">Renouvellement maintenance, extension installation. Objectif : transformer clients satisfaits en prescripteurs.</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-label" style="margin-top:20px">Points de contact par persona — carte de l'expérience client</div>
+
+  <div class="alert a-info">
+    <div class="alert-icon">🗺️</div>
+    <div><strong>Ce que le jury attend ici</strong> — Savoir identifier <em>qui</em> est en contact avec l'entreprise, <em>à quelle étape</em> du parcours et <em>via quel canal</em>. C'est la base de toute stratégie d'optimisation de l'expérience client.</div>
+  </div>
+
+  <table class="tbl">
+    <tr>
+      <th>Étape du parcours</th>
+      <th>Marc GUILLOT<br><small>Promoteur immo.</small></th>
+      <th>Sophie BERNARD<br><small>Directrice industrie</small></th>
+      <th>Paul VERNIER<br><small>Élu municipal</small></th>
+      <th>Lucie MORIN<br><small>Achats coopérative</small></th>
+    </tr>
+    <tr>
+      <td><strong>1. Détection du besoin</strong></td>
+      <td>Veille réglementaire RE2020 + email prospection TC</td>
+      <td>Facture énergie trop haute → Google + bouche à oreille</td>
+      <td>Appel d'offre public + subventions régionales</td>
+      <td>Salon agricole + recommandation d'un pair</td>
+    </tr>
+    <tr>
+      <td><strong>2. Audit & contact TC</strong></td>
+      <td>RDV physique en bureau : visite technique du bâtiment</td>
+      <td>Visite terrain + appel téléphonique de cadrage</td>
+      <td>Réunion en mairie avec le TC + présentation institutionnelle</td>
+      <td>Visite sur site agricole + démonstration matérielle</td>
+    </tr>
+    <tr>
+      <td><strong>3. Remise du devis</strong><br><small>⚠️ Point de friction</small></td>
+      <td>Devis détaillé par email — attend ROI sur 10 ans</td>
+      <td>Devis téléphonique puis écrit — comparaison 3 fournisseurs</td>
+      <td>Dossier d'appel d'offre formel + présentation en conseil</td>
+      <td>Devis simplifié + simulation de subventions disponibles</td>
+    </tr>
+    <tr>
+      <td><strong>4. Installation</strong><br><small>✅ Moment de vérité</small></td>
+      <td>Suivi de chantier via extranet + réunion de livraison</td>
+      <td>Présence sur site lors de la mise en service</td>
+      <td>Inauguration publique — enjeu d'image politique fort</td>
+      <td>Formation de l'équipe agricole à l'utilisation</td>
+    </tr>
+    <tr>
+      <td><strong>5. Suivi post-vente</strong><br><small>⚠️ Point de friction majeur</small></td>
+      <td>Tableau de bord production en ligne + rapport annuel</td>
+      <td>SAV réactif sous 48h — zéro tolérance arrêt de prod.</td>
+      <td>Bilan annuel en conseil municipal — transparence attendue</td>
+      <td>Hotline dédiée + visite annuelle du TC</td>
+    </tr>
+    <tr>
+      <td><strong>6. Fidélisation</strong></td>
+      <td>Proposition d'extension sur nouveaux programmes immo.</td>
+      <td>Contrat de maintenance pluriannuel + upsell stockage</td>
+      <td>Projet de 2e tranche — extension à d'autres bâtiments communaux</td>
+      <td>Recommandation à d'autres coopératives du réseau</td>
+    </tr>
+  </table>
+
+  <div class="card card-blue" style="margin-top:4px">
+    <h3>🔑 Comment utiliser ce tableau en exam ?</h3>
+    <p>En exam, on vous demandera d'identifier les <strong>moments de vérité</strong> (points de contact critiques qui font basculer la décision) et les <strong>points de friction</strong> (étapes difficiles qui génèrent de l'insatisfaction). Pour SOLARTEC :</p>
+    <ul>
+      <li><strong>Moment de vérité n°1 :</strong> la qualité de l'audit énergétique — si le TC sous-estime la production ou survend le ROI, la relation client est compromise dès le départ</li>
+      <li><strong>Moment de vérité n°2 :</strong> la mise en service — chaque persona y attache une importance différente (enjeu d'image pour Paul, enjeu de production pour Sophie)</li>
+      <li><strong>Point de friction commun :</strong> le délai de remise du devis (&gt;10 jours) et la réactivité du SAV — sources d'insatisfaction pour tous les personas</li>
+    </ul>
+    <p style="margin-top:8px"><strong>Recommandation managériale :</strong> adapter le canal et le niveau de détail à chaque persona. Paul VERNIER n'a pas besoin du même discours que Sophie BERNARD — l'un est sensible à l'image publique et à la transparence, l'autre au ROI et à la continuité de production.</p>
+  </div>
+
+  <div class="card card-blue">
+    <h3>📱 Le phygital chez SOLARTEC</h3>
+    <p><strong>Phygital</strong> = "physique" + "digital". Strategie combinant points de contact physiques et digitaux.</p>
+    <ul>
+      <li><strong>Simulateur 3D en ligne :</strong> le prospect simule sa production et son ROI avant toute visite du TC</li>
+      <li><strong>Application RA (realite augmentee) :</strong> visualiser les panneaux sur son propre batiment via smartphone</li>
+      <li><strong>Extranet client :</strong> tableau de bord de suivi de production en temps reel apres installation</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== RECRUTEMENT ===== -->
+<div class="tab-pane" id="tab-recrut">
+  <div class="sec-label">Module 3 · MATC A2.1.T1</div>
+  <div class="sec-title">Recrutement TC — Methode complete</div>
+
+  <div class="alert a-warn">
+    <div class="alert-icon">⚠️</div>
+    <div><strong>Erreur frequente des etudiants</strong>
+    Fiche de poste trop generique. Le jury veut des elements specifiques au poste. Chez SOLARTEC : maitrise des aides (MaPrimeRenov, CEE), capacite a realiser un audit energetique, anglais si export.</div>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div><div class="s-title">Intitule du poste</div><div class="s-desc">Ex. SOLARTEC : "Technico-commercial(e) itinerant(e) — Solutions photovoltaiques B2B — Secteur Bretagne"</div></div></div>
+    <div class="step"><div class="sn">2</div><div><div class="s-title">Position dans l'organisation</div><div class="s-desc">Sous responsabilite du Directeur Commercial, en lien avec le bureau d'etudes et l'equipe installation.</div></div></div>
+    <div class="step"><div class="sn">3</div><div><div class="s-title">Missions principales</div><div class="s-desc">Prospecter collectivites/industries/bailleurs, realiser audits energetiques, proposer et chiffrer les solutions PV, negocier et signer les contrats, assurer le suivi post-installation.</div></div></div>
+    <div class="step"><div class="sn">4</div><div><div class="s-title">Competences requises</div><div class="s-desc"><strong>Techniques :</strong> energie solaire, dimensionnement PV, RE2020, aides (MaPrimeRenov, CEE). <strong>Commerciales :</strong> prospection B2B, negociation grand compte, CRM. <strong>Comportementales :</strong> autonomie, rigueur, pedagogie.</div></div></div>
+    <div class="step"><div class="sn">5</div><div><div class="s-title">Formation et experience</div><div class="s-desc">BTS CCST, BTS Electrotechnique ou equivalent. 2 ans minimum en vente technique B2B. Permis B obligatoire.</div></div></div>
+    <div class="step"><div class="sn">6</div><div><div class="s-title">Conditions du poste</div><div class="s-desc">CDI cadre. 30–35 K€ fixe + variable. Vehicule de fonction, PC, smartphone.</div></div></div>
+  </div>
+
+  <div class="card card-olive" style="margin-top:20px">
+    <h3>⚖️ Grille de ponderee — formule et exemple</h3>
+    <div class="formula olive">Score pondere = Σ (Note du critere × Coefficient du critere)</div>
+    <table class="tbl" style="margin-top:14px">
+      <tr><th class="olive">Critere</th><th class="olive">Justification</th><th class="olive" style="width:55px">Coeff.</th><th class="olive" style="width:75px">Note 0-4</th><th class="olive" style="width:75px">Score</th></tr>
+      <tr><td>Experience vente TC B2B</td><td>Mission principale : prospecter et vendre des solutions complexes a des pros</td><td class="c"><strong>3</strong></td><td class="c">0 a 4</td><td class="c">× 3</td></tr>
+      <tr><td>Connaissance secteur energie/PV</td><td>Argumenter sur technologies, aides, ROI — expertise indispensable</td><td class="c"><strong>2</strong></td><td class="c">0 a 4</td><td class="c">× 2</td></tr>
+      <tr><td>Capacite a realiser un audit</td><td>Le TC conduit l'audit energetique seul sur site</td><td class="c"><strong>2</strong></td><td class="c">0 a 4</td><td class="c">× 2</td></tr>
+      <tr><td>Maitrise CRM et outils digitaux</td><td>Suivi portefeuille, reporting hebdomadaire obligatoire</td><td class="c"><strong>1</strong></td><td class="c">0 a 4</td><td class="c">× 1</td></tr>
+      <tr><td>Autonomie et organisation</td><td>TC itinerant : gere seul son planning de tournees</td><td class="c"><strong>1</strong></td><td class="c">0 a 4</td><td class="c">× 1</td></tr>
+      <tr><td>Mobilite geographique</td><td>Zone Bretagne = deplacements frequents, permis B obligatoire</td><td class="c"><strong>1</strong></td><td class="c">0 a 4</td><td class="c">× 1</td></tr>
+      <tr style="background:var(--olive-lt)"><td><strong>TOTAL</strong></td><td></td><td class="c"><strong>10</strong></td><td></td><td class="c"><strong>Max 40</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="box2">
+    <div class="concept">
+      <div class="con-hd green">✅ Questions autorisees (Art. L1221-6)</div>
+      <div class="con-body"><ul>
+        <li>Experience en vente B2B dans l'energie ?</li>
+        <li>Avez-vous realise des audits energetiques ?</li>
+        <li>Quel CRM maitrisez-vous ?</li>
+        <li>Comment organisez-vous votre semaine type ?</li>
+        <li>Mise en situation : vendez-moi une installation PV a une mairie</li>
+      </ul></div>
+    </div>
+    <div class="concept">
+      <div class="con-hd red">❌ Questions interdites (Art. L1132-1)</div>
+      <div class="con-body"><ul>
+        <li>Situation familiale, enfants, mariage</li>
+        <li>Grossesse ou projets de maternite</li>
+        <li>Origine, nationalite, religion</li>
+        <li>Etat de sante ou handicap</li>
+        <li>Opinions politiques ou syndicales</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SYNTHESE ===== -->
+<div class="tab-pane" id="tab-synth">
+  <div class="sec-label">Module 4 · Competence redactionnelle</div>
+  <div class="sec-title">La synthese manageriale — methode et structure</div>
+
+  <div class="alert a-err">
+    <div class="alert-icon">🚨</div>
+    <div><strong>La synthèse managériale n'est pas un résumé !</strong>
+    C'est un document professionnel orienté décision, rédigé pour la direction. Le jury évalue votre capacité à communiquer comme un manager — pas comme un étudiant qui récite ses fiches.</div>
+  </div>
+
+  <div class="synth">
+    <div class="synth-hd dark">1️⃣ En-tete — Obligatoire (points perdus si absent)</div>
+    <div class="synth-body"><strong>A :</strong> Mme/M. [Prenom NOM], [Fonction]<br><strong>De :</strong> [Votre prenom NOM], [Votre fonction]<br><strong>Objet :</strong> [Sujet precis]<br><strong>Date :</strong> [Date du jour]</div>
+  </div>
+  <div class="synth">
+    <div class="synth-hd blue">2️⃣ Introduction — Contexte en 3 à 5 lignes</div>
+    <div class="synth-body">
+      Posez le contexte, votre rôle et la problématique en 3 à 5 lignes. Évitez les formules creuses — allez droit au but.<br><br>
+      <em>Exemple rédigé :</em><br>
+      "Dans le cadre de ma mission d'analyse de la performance commerciale sur le segment Collectivités et Agriculture, j'ai examiné les résultats de l'équipe sur le premier semestre 2024. Si la gamme Industrie &amp; Tertiaire affiche une dynamique encourageante, deux segments présentent des écarts préoccupants par rapport aux objectifs fixés en début d'année. Cette note vise à présenter ces résultats de manière synthétique et à proposer des axes d'action concrets pour le second semestre."
+    </div>
+  </div>
+  <div class="synth">
+    <div class="synth-hd blue">3️⃣ Développement — Parties numérotées et rédigées</div>
+    <div class="synth-body">
+      Chaque partie répond à une question du sujet, rédigée en paragraphe fluide — pas en liste de puces. Voici trois exemples de la façon dont on rédige :<br><br>
+
+      <strong>1. Bilan collectif de l'équipe — exemple rédigé :</strong><br>
+      <em>"Au terme du premier semestre 2024, l'équipe commerciale atteint 98,8 % de son objectif global, soit un écart de 33 400 € en dessous de la cible de 2 904 000 €. Ce résultat global masque cependant des situations contrastées : si la gamme Industrie &amp; Tertiaire dépasse son objectif de 3,3 %, la gamme Collectivités &amp; Agriculture accuse un retard significatif de 57 700 €, soit un taux de réalisation de seulement 94,1 %. Ce point constitue l'alerte prioritaire de ce bilan."</em><br><br>
+
+      <strong>2. Performances individuelles — exemple rédigé :</strong><br>
+      <em>"L'analyse individuelle révèle des écarts importants au sein de l'équipe. Baptiste se distingue par un taux de réalisation de 106 % sur la gamme Industrie, tandis que Théo peine à atteindre 88 % sur la gamme Collectivités malgré un portefeuille bien garni. Cette situation suggère non pas un problème de prospection — Théo réalise autant de visites que ses collègues — mais plutôt une difficulté à transformer les opportunités en commandes fermes. Un accompagnement sur la phase de closing semble prioritaire."</em><br><br>
+
+      <strong>3. Actions correctives — exemple rédigé :</strong><br>
+      <em>"Afin de redresser les résultats sur la gamme Collectivités, je préconise deux actions complémentaires. D'une part, un accompagnement terrain de Théo par le responsable commercial sur deux semaines en juillet, centré sur la gestion des appels d'offres publics. D'autre part, la mise en place d'un challenge collectif sur le second semestre, avec un objectif d'équipe chiffré et une prime partagée en cas d'atteinte. Ces deux leviers s'appuient respectivement sur la montée en compétences et sur la dynamique collective — deux facteurs identifiés comme prioritaires par les commerciaux eux-mêmes."</em><br><br>
+      <strong>Règle d'or :</strong> chaque constat doit déboucher sur une recommandation concrète, avec un délai et un indicateur de suivi.
+    </div>
+  </div>
+  <div class="synth">
+    <div class="synth-hd olive">4️⃣ Conclusion — 2 à 3 décisions, avec indicateurs</div>
+    <div class="synth-body">
+      Terminez par vos recommandations prioritaires, rédigées clairement. Trois phrases suffisent — une par décision.<br><br>
+      <em>Exemple rédigé :</em><br>
+      "En conclusion, je recommande trois actions prioritaires pour le second semestre. Premièrement, un accompagnement individuel de Théo sur la gamme Collectivités, dont la progression sera mesurée via son taux de réalisation mensuel — objectif : dépasser 98 % au quatrième trimestre. Deuxièmement, un challenge d'équipe centré sur cette même gamme, avec une prime collective conditionnée à l'atteinte de l'objectif global. Troisièmement, une présence renforcée au salon Energaïa en novembre pour capter de nouveaux prospects institutionnels et alimenter le portefeuille du second semestre. Je reste disponible pour échanger sur ces préconisations lors de notre prochain point d'équipe."
+    </div>
+  </div>
+
+  <div class="sec-label" style="margin-top:20px">Les 8 regles d'or</div>
+  <div class="chk-grid">
+    <div class="chk-item"><div class="chk-ico ok">✓</div>Ecrire en paragraphes rediges — pas en liste de puces</div>
+    <div class="chk-item"><div class="chk-ico ok">✓</div>Utiliser le vocabulaire managerial (leviers, axes, plan d'action)</div>
+    <div class="chk-item"><div class="chk-ico ok">✓</div>Chiffrer chaque constat (taux, ecarts, montants)</div>
+    <div class="chk-item"><div class="chk-ico ok">✓</div>Associer chaque action a un indicateur de suivi</div>
+    <div class="chk-item"><div class="chk-ico no">✗</div>Ne pas recopier les annexes — analyser et synthetiser</div>
+    <div class="chk-item"><div class="chk-ico no">✗</div>Ne pas oublier l'en-tete complet (A / De / Objet / Date)</div>
+    <div class="chk-item"><div class="chk-ico no">✗</div>Ne pas depasser 1 page — la synthese doit etre concise</div>
+    <div class="chk-item"><div class="chk-ico no">✗</div>Ne pas confondre synthese manageriale et resume de cours</div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="tab-pane" id="tab-quiz">
+  <div class="sec-label">Auto-evaluation · Revision active</div>
+  <div class="sec-title">Quiz auto-corrige — Cas SOLARTEC</div>
+
+  <div class="score-bar">
+    <div class="sc-circle" id="sc-circle">
+      <div class="sc-n" id="sc-n">0</div>
+      <div class="sc-t">/ <span id="sc-tot">10</span></div>
+    </div>
+    <div class="sc-label">
+      <strong id="sc-msg">Commencez le quiz</strong>
+      <span id="sc-sub">Repondez aux questions pour voir votre score</span>
+    </div>
+    <button class="reset-btn" id="reset-btn">🔄 Recommencer</button>
+  </div>
+
+  <div class="quiz-sec-label">📊 Section A — Calculs KPI (entrez votre reponse)</div>
+
+  <div id="quiz-calc-container"></div>
+
+  <div class="quiz-sec-label">🧠 Section B — Questions a choix multiple</div>
+
+  <div id="quiz-qcm-container"></div>
+
+</div>
+
+</div><!-- container -->
+
+<div class="footer">
+  <strong>Pole Sup Marcel Callo</strong> &middot; BTS CCST 1ere annee &middot; Revision MATC E6 &middot; Session 2026<br>
+  Cas fictif SOLARTEC &mdash; Usage pedagogique interne
+</div>
+
+<script>
+/* =========================================================
+   TAB NAVIGATION — data-tab attribute driven, no index map
+   ========================================================= */
+document.getElementById("tabnav").addEventListener("click", function(e) {
+  var btn = e.target.closest(".tab-btn");
+  if (!btn) return;
+  var tab = btn.getAttribute("data-tab");
+  document.querySelectorAll(".tab-pane").forEach(function(p){ p.classList.remove("active"); });
+  document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); });
+  document.getElementById("tab-" + tab).classList.add("active");
+  btn.classList.add("active");
+});
+
+/* =========================================================
+   SCORE ENGINE
+   ========================================================= */
+var scores = {};
+var TOTAL_Q = 10;
+
+function updateScore() {
+  var keys = Object.keys(scores);
+  var correct = keys.filter(function(k){ return scores[k]; }).length;
+  document.getElementById("sc-n").textContent = correct;
+  document.getElementById("sc-tot").textContent = TOTAL_Q;
+  var pct = keys.length === 0 ? 0 : correct / TOTAL_Q;
+  var circle = document.getElementById("sc-circle");
+  circle.style.background = pct >= 0.8 ? "var(--green)" : pct >= 0.5 ? "var(--orange)" : "var(--blue)";
+  var msgs = [
+    "Commencez le quiz",
+    "Continuez, vous progressez !",
+    "Bonne progression !",
+    "Tres bon score !",
+    "Excellent, bravo !"
+  ];
+  var idx = Math.round(pct * 4);
+  document.getElementById("sc-msg").textContent = keys.length === 0 ? msgs[0] : msgs[idx];
+  document.getElementById("sc-sub").textContent = keys.length > 0
+    ? correct + " bonne(s) reponse(s) sur " + keys.length + " question(s) repondues"
+    : "Repondez aux questions pour voir votre score";
+}
+
+/* =========================================================
+   CALC QUESTIONS DATA
+   ========================================================= */
+var calcQuestions = [
+  {
+    id: "qc1",
+    color: "",
+    num: "Calcul · Question 1",
+    text: "SOLARTEC — Gamme Industrie & tertiaire : CA 2023 = 1 240 000 € | Objectif +20%.<br>Calculez l'objectif CA 2024, le CA si taux de realisation = 103,3%, et l'ecart.",
+    fields: [
+      { id: "qc1a", label: "Objectif CA 2024 = 1 240 000 × 1,20 =", unit: "€", val: 1488000, tol: 500,
+        explain: "1 240 000 × 1,20 = <strong>1 488 000 €</strong>" },
+      { id: "qc1b", label: "CA realise 2024 ≈ Objectif × 1,033 =", unit: "€", val: 1536804, tol: 5000,
+        explain: "1 488 000 × 1,033 ≈ <strong>1 536 804 €</strong> (le sujet donne 1 536 800 €)" },
+      { id: "qc1c", label: "Ecart = CA realise − Objectif =", unit: "€", val: 48800, tol: 5000,
+        explain: "1 536 800 − 1 488 000 = <strong>+48 800 €</strong> ✅ Objectif depasse" }
+    ]
+  },
+  {
+    id: "qc2",
+    color: "",
+    num: "Calcul · Question 2",
+    text: "SOLARTEC — Collectivites & agriculture : CA 2023 = 890 000 € | Objectif +10% | CA realise 2024 = 921 300 €.<br>Calculez l'objectif, le taux de realisation et l'ecart en euros.",
+    fields: [
+      { id: "qc2a", label: "Objectif CA 2024 = 890 000 × 1,10 =", unit: "€", val: 979000, tol: 100,
+        explain: "890 000 × 1,10 = <strong>979 000 €</strong>" },
+      { id: "qc2b", label: "Taux realisation = 921 300 ÷ 979 000 × 100 =", unit: "%", val: 94.1, tol: 0.6,
+        explain: "921 300 ÷ 979 000 × 100 = <strong>94,1%</strong> ⚠️ Objectif non atteint" },
+      { id: "qc2c", label: "Ecart = CA realise − Objectif =", unit: "€", val: -57700, tol: 500,
+        explain: "921 300 − 979 000 = <strong>−57 700 €</strong> 🔴 Point d'alerte prioritaire" }
+    ]
+  },
+  {
+    id: "qc3",
+    color: "olive",
+    num: "Calcul · Question 3",
+    text: "TC Camille — Gamme Industrie & tertiaire : CA 2023 = 285 000 € | Objectif +20% | CA realise = 318 400 € | Marge = 108 890 €.<br>Calculez l'objectif individuel, le taux de realisation et le taux de marque.",
+    fields: [
+      { id: "qc3a", label: "Objectif individuel 2024 = 285 000 × 1,20 =", unit: "€", val: 342000, tol: 100,
+        explain: "285 000 × 1,20 = <strong>342 000 €</strong>" },
+      { id: "qc3b", label: "Taux realisation = 318 400 ÷ 342 000 × 100 =", unit: "%", val: 93.1, tol: 0.6,
+        explain: "318 400 ÷ 342 000 × 100 = <strong>93,1%</strong> ⚠️ En retard de 6,9% sur l'objectif" },
+      { id: "qc3c", label: "Taux de marque = 108 890 ÷ 318 400 × 100 =", unit: "%", val: 34.2, tol: 0.6,
+        explain: "108 890 ÷ 318 400 × 100 = <strong>34,2%</strong> ✅ Bonne rentabilite" }
+    ]
+  },
+  {
+    id: "qc4",
+    color: "dark",
+    num: "Calcul · Question 4",
+    text: "Grille de ponderee — TC Nora :<br>Experience TC B2B (note 3, coeff 3) | Secteur energie (note 4, coeff 2) | Audit (note 3, coeff 2) | CRM (note 4, coeff 1) | Autonomie (note 3, coeff 1) | Mobilite (note 4, coeff 1).<br>Calculez le score pondere total de Nora (sur 40).",
+    fields: [
+      { id: "qc4a", label: "Score = (3×3)+(4×2)+(3×2)+(4×1)+(3×1)+(4×1) =", unit: "/ 40", val: 34, tol: 0,
+        explain: "9 + 8 + 6 + 4 + 3 + 4 = <strong>34 / 40</strong> ✅ Nora est une candidate solide !" }
+    ]
+  }
+];
+
+/* =========================================================
+   QCM QUESTIONS DATA
+   ========================================================= */
+var qcmQuestions = [
+  {
+    id: "qq1", color: "",
+    num: "QCM · Question 5",
+    text: "Quelle est la bonne formule du taux de marque ?",
+    choices: [
+      "A. Taux de marque = Marge ÷ Cout d'achat × 100",
+      "B. Taux de marque = Marge ÷ CA HT × 100",
+      "C. Taux de marque = CA ÷ Objectif × 100",
+      "D. Taux de marque = Cout d'achat ÷ Marge × 100"
+    ],
+    correct: 1,
+    ok: "Exact ! Le taux de marque = Marge ÷ CA × 100. Ne pas confondre avec le taux de marge (Marge ÷ Cout d'achat).",
+    ko: "Non. Le taux de marque = Marge ÷ CA HT × 100. La bonne reponse etait B."
+  },
+  {
+    id: "qq2", color: "",
+    num: "QCM · Question 6",
+    text: "SOLARTEC : CA 2023 = 890 000 €, objectif +10%, CA realise 2024 = 921 300 €. Quel est le taux de realisation ?<br><br><span style=\"display:inline-block;background:#fff5e0;border:1px solid #f0c060;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:400;color:#5a3e00;\">💡 <strong>Aide :</strong> Le taux de réalisation compare le CA réalisé de l'année N à l'<em>objectif fixé</em> pour cette même année — pas au CA N-1. L'objectif 2024 = CA 2023 × (1 + taux). Ne pas confondre avec l'évolution CA (CA N vs CA N-1).</span>",
+    choices: ["A. 103,5%", "B. 97,0%", "C. 94,1%", "D. 88,9%"],
+    correct: 2,
+    ok: "Parfait ! Étape 1 : Objectif 2024 = 890 000 × 1,10 = 979 000 €. Étape 2 : Taux réalisation = 921 300 ÷ 979 000 × 100 = 94,1%. On compare bien le CA réalisé 2024 à l'objectif 2024, pas au CA 2023.",
+    ko: "Attention : l'objectif 2024 = 890 000 × 1,10 = 979 000 €. Taux réalisation = 921 300 ÷ 979 000 × 100 = 94,1%. On compare le CA réalisé à l'objectif de l'année, pas au CA de l'année précédente. Bonne réponse : C."
+  },
+  {
+    id: "qq3", color: "olive",
+    num: "QCM · Question 7",
+    text: "Quelle est la difference entre experience client et satisfaction client ?",
+    choices: [
+      "A. Ce sont des synonymes, ils mesurent la meme chose",
+      "B. La satisfaction est une mesure ponctuelle post-achat ; l'experience client couvre toutes les perceptions avant, pendant et apres l'achat",
+      "C. L'experience concerne uniquement la phase d'achat, la satisfaction la livraison",
+      "D. La satisfaction se calcule via le NPS, l'experience via le taux de marque"
+    ],
+    correct: 1,
+    ok: "Bonne definition ! La satisfaction est ponctuelle (apres l'achat) ; l'experience client est globale et couvre tout le parcours.",
+    ko: "La satisfaction est ponctuelle (post-achat). L'experience client couvre toutes les emotions sur tout le parcours. Bonne reponse : B."
+  },
+  {
+    id: "qq4", color: "olive",
+    num: "QCM · Question 8",
+    text: "Lors d'un entretien de recrutement, laquelle de ces questions est INTERDITE par le Code du travail ?",
+    choices: [
+      "A. Avez-vous de l'experience en vente B2B dans l'energie ?",
+      "B. Comment organisez-vous votre semaine de travail ?",
+      "C. Etes-vous marie(e) et avez-vous des enfants ?",
+      "D. Quelle est votre zone geographique de mobilite ?"
+    ],
+    correct: 2,
+    ok: "Exact ! Les questions sur la situation familiale sont interdites par l'Art. L1132-1 (non-discrimination). Seules les questions liees au poste sont autorisees (Art. L1221-6).",
+    ko: "La question sur la situation familiale est interdite par l'Art. L1132-1. Bonne reponse : C."
+  },
+  {
+    id: "qq5", color: "dark",
+    num: "QCM · Question 9",
+    text: "Quelle est la structure complète et dans le bon ordre d'une synthèse managériale professionnelle ?<br><br><span style=\"display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:400;color:#fff;\">💡 <strong>Rappel :</strong> dans l'onglet Synthèse managériale, vous avez vu 4 éléments obligatoires dans l'ordre : En-tête → Introduction → Développement → Conclusion. Retrouvez le bon ordre ci-dessous.</span>",
+    choices: [
+      "A. Introduction (contexte) → Développement → Conclusion → En-tête (À / De / Objet / Date)",
+      "B. En-tête (À / De / Objet / Date) → Introduction (contexte) → Développement numéroté → Conclusion avec décisions et KPI",
+      "C. Résumé des annexes → Constats chiffrés → Tableau de bord → Recommandations",
+      "D. Problématique → Hypothèse → Démonstration → Conclusion — comme une dissertation"
+    ],
+    correct: 1,
+    ok: "Exact ! La structure est : 1. En-tête (À / De / Objet / Date) — toujours en premier. 2. Introduction : contexte et problématique en 3-5 lignes. 3. Développement : parties numérotées avec titres, rédigées en paragraphes. 4. Conclusion : 2-3 décisions prioritaires avec indicateurs de suivi.",
+    ko: "La bonne structure est : En-tête → Introduction → Développement numéroté → Conclusion avec KPI. L'en-tête est TOUJOURS en premier — sans lui, ce n'est pas un document professionnel. Bonne réponse : B."
+  },
+  {
+    id: "qq6", color: "dark",
+    num: "QCM · Question 10",
+    text: "Quelle est la formule de la grille de ponderee pour comparer des candidats ?",
+    choices: [
+      "A. Score = Somme des notes ÷ Nombre de criteres",
+      "B. Score = Meilleure note × Nombre de criteres",
+      "C. Score pondere = Somme (Note du critere × Coefficient du critere)",
+      "D. Score = Total des coefficients ÷ Nombre de candidats"
+    ],
+    correct: 2,
+    ok: "Exact ! Score pondere = Somme (Note × Coefficient). Cette formule permet de peser chaque critere selon son importance pour le poste.",
+    ko: "La formule est : Score pondere = Somme (Note × Coefficient). Bonne reponse : C."
+  }
+];
+
+/* =========================================================
+   RENDER CALC QUESTIONS
+   ========================================================= */
+function renderCalc() {
+  var container = document.getElementById("quiz-calc-container");
+  container.innerHTML = "";
+  calcQuestions.forEach(function(q) {
+    var card = document.createElement("div");
+    card.className = "quiz-card";
+    card.id = q.id;
+
+    var hd = document.createElement("div");
+    hd.className = "qhd" + (q.color ? " " + q.color : "");
+    hd.innerHTML = "<div class='qnum'>" + q.num + "</div><div class='qtext'>" + q.text + "</div>";
+    card.appendChild(hd);
+
+    var body = document.createElement("div");
+    body.className = "qbody";
+
+    q.fields.forEach(function(f) {
+      var row = document.createElement("div");
+      row.className = "calc-row";
+      row.innerHTML = "<span class='calc-label'>" + f.label + "</span>"
+        + "<input class='calc-input' id='" + f.id + "' type='number' step='any' placeholder='0'>"
+        + "<span class='calc-unit'>" + f.unit + "</span>";
+      body.appendChild(row);
+    });
+
+    var btn = document.createElement("button");
+    btn.className = "check-btn" + (q.color ? " " + q.color : "");
+    btn.textContent = "Verifier mes calculs";
+    btn.setAttribute("data-qid", q.id);
+    btn.addEventListener("click", function() { checkCalc(q.id); });
+    body.appendChild(btn);
+
+    var fb = document.createElement("div");
+    fb.className = "feedback";
+    fb.id = q.id + "-fb";
+    body.appendChild(fb);
+
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+}
+
+function checkCalc(qid) {
+  var q = calcQuestions.find(function(x){ return x.id === qid; });
+  if (!q) return;
+  var allOk = true;
+  var html = "";
+  q.fields.forEach(function(f) {
+    var inp = document.getElementById(f.id);
+    var val = parseFloat(inp.value.replace(",", "."));
+    var ok = !isNaN(val) && Math.abs(val - f.val) <= f.tol;
+    inp.className = "calc-input " + (ok ? "correct" : "wrong");
+    inp.disabled = true;
+    html += "<p>" + (ok ? "✅" : "❌") + " " + f.explain + "</p>";
+    if (!ok) allOk = false;
+  });
+  var fb = document.getElementById(qid + "-fb");
+  fb.innerHTML = html;
+  fb.className = "feedback show " + (allOk ? "ok" : "partial");
+  var btn = document.querySelector("#" + qid + " .check-btn");
+  if (btn) btn.disabled = true;
+  scores[qid] = allOk;
+  updateScore();
+}
+
+/* =========================================================
+   RENDER QCM QUESTIONS
+   ========================================================= */
+function renderQCM() {
+  var container = document.getElementById("quiz-qcm-container");
+  container.innerHTML = "";
+  qcmQuestions.forEach(function(q) {
+    var card = document.createElement("div");
+    card.className = "quiz-card";
+    card.id = q.id;
+
+    var hd = document.createElement("div");
+    hd.className = "qhd" + (q.color ? " " + q.color : "");
+    hd.innerHTML = "<div class='qnum'>" + q.num + "</div><div class='qtext'>" + q.text + "</div>";
+    card.appendChild(hd);
+
+    var body = document.createElement("div");
+    body.className = "qbody";
+
+    var choicesDiv = document.createElement("div");
+    choicesDiv.className = "choices";
+    q.choices.forEach(function(text, idx) {
+      var btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.textContent = text;
+      btn.setAttribute("data-idx", idx);
+      btn.addEventListener("click", function() { checkQCM(q.id, idx); });
+      choicesDiv.appendChild(btn);
+    });
+    body.appendChild(choicesDiv);
+
+    var fb = document.createElement("div");
+    fb.className = "feedback";
+    fb.id = q.id + "-fb";
+    body.appendChild(fb);
+
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+}
+
+function checkQCM(qid, chosen) {
+  var q = qcmQuestions.find(function(x){ return x.id === qid; });
+  if (!q) return;
+  var card = document.getElementById(qid);
+  var btns = card.querySelectorAll(".choice-btn");
+  btns.forEach(function(b) { b.disabled = true; });
+  var isOk = chosen === q.correct;
+  btns[chosen].className = "choice-btn " + (isOk ? "correct" : "wrong");
+  if (!isOk) btns[q.correct].className = "choice-btn reveal";
+  var fb = document.getElementById(qid + "-fb");
+  fb.innerHTML = (isOk ? "✅ " : "❌ ") + (isOk ? q.ok : q.ko);
+  fb.className = "feedback show " + (isOk ? "ok" : "ko");
+  scores[qid] = isOk;
+  updateScore();
+}
+
+/* =========================================================
+   RESET
+   ========================================================= */
+document.getElementById("reset-btn").addEventListener("click", function() {
+  scores = {};
+  renderCalc();
+  renderQCM();
+  updateScore();
+});
+
+/* =========================================================
+   INIT
+   ========================================================= */
+renderCalc();
+renderQCM();
+updateScore();
+</script>
+</body>
+</html>
